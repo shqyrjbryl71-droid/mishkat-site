@@ -1,1 +1,463 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173a32">
+  <meta name="description" content="مشكاة — قراءة القرآن الكريم والبحث في آياته بسهولة وطمأنينة.">
+  <title>مشكاة | القرآن الكريم</title>
+  <style>
+    :root {
+      --ink: #173a32;
+      --ink-soft: #47645c;
+      --paper: #f7f1e5;
+      --paper-deep: #ede3d0;
+      --gold: #b98a43;
+      --gold-light: #ddc28e;
+      --white: #fffdf7;
+      --line: rgba(23, 58, 50, .14);
+      --shadow: 0 20px 60px rgba(37, 45, 36, .12);
+      --radius: 24px;
+    }
 
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 8% 12%, rgba(185, 138, 67, .15), transparent 28rem),
+        radial-gradient(circle at 92% 88%, rgba(23, 58, 50, .1), transparent 30rem),
+        var(--paper);
+      font-family: "Noto Naskh Arabic", "Amiri", "Times New Roman", serif;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .18;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.12'/%3E%3C/svg%3E");
+      z-index: 20;
+    }
+
+    button, input { font: inherit; }
+    button { color: inherit; }
+    a { color: inherit; }
+    .shell { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(18px);
+      background: rgba(247, 241, 229, .82);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav {
+      min-height: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .brand-mark {
+      width: 46px;
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      border-radius: 50% 50% 46% 54%;
+      background: var(--ink);
+      color: var(--gold-light);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.18);
+      transform: rotate(-5deg);
+    }
+    .brand-mark svg { width: 26px; transform: rotate(5deg); }
+    .brand strong { font-size: 1.55rem; letter-spacing: .02em; }
+    .brand small { display: block; color: var(--ink-soft); font-family: sans-serif; font-size: .68rem; }
+
+    .nav-links { display: flex; align-items: center; gap: 8px; }
+    .nav-links a {
+      text-decoration: none;
+      padding: 9px 15px;
+      border-radius: 99px;
+      transition: background .2s ease, transform .2s ease;
+    }
+    .nav-links a:hover { background: rgba(23,58,50,.08); transform: translateY(-1px); }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: clamp(32px, 7vw, 96px);
+      align-items: center;
+      min-height: 620px;
+      padding: 72px 0 84px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--gold);
+      font-family: sans-serif;
+      font-size: .82rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+    }
+    .eyebrow::before { content: ""; width: 34px; height: 1px; background: currentColor; }
+    h1 { margin: 18px 0 20px; font-size: clamp(3.5rem, 8vw, 7.2rem); line-height: .92; font-weight: 500; }
+    h1 span { display: block; margin-top: 14px; color: var(--gold); font-size: .48em; }
+    .hero-copy > p { max-width: 590px; color: var(--ink-soft); font-size: 1.2rem; line-height: 2; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+    .button {
+      border: 0;
+      border-radius: 99px;
+      padding: 13px 24px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+    }
+    .button:hover { transform: translateY(-2px); }
+    .button-primary { background: var(--ink); color: var(--white); box-shadow: 0 12px 30px rgba(23,58,50,.22); }
+    .button-ghost { border: 1px solid var(--line); background: rgba(255,255,255,.3); }
+
+    .hero-art { position: relative; min-height: 430px; display: grid; place-items: center; }
+    .arch {
+      position: absolute;
+      width: min(390px, 90%);
+      height: 430px;
+      border: 1px solid rgba(185,138,67,.45);
+      border-radius: 200px 200px 24px 24px;
+      background: linear-gradient(155deg, rgba(255,253,247,.85), rgba(237,227,208,.36));
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .arch::before, .arch::after {
+      content: "";
+      position: absolute;
+      border: 1px solid rgba(185,138,67,.22);
+      border-radius: 50%;
+    }
+    .arch::before { inset: 38px -130px auto; height: 290px; }
+    .arch::after { inset: auto -80px -170px; height: 330px; }
+    .verse-card {
+      position: relative;
+      z-index: 2;
+      width: min(340px, 78%);
+      padding: 34px 28px;
+      text-align: center;
+      background: var(--ink);
+      color: var(--white);
+      border-radius: 20px 20px 80px 20px;
+      box-shadow: 0 24px 50px rgba(23,58,50,.28);
+      transform: rotate(2deg);
+    }
+    .verse-card::before { content: "﴿"; display: block; color: var(--gold-light); font-size: 2.4rem; line-height: 1; }
+    .verse-card p { font-size: clamp(1.5rem, 3vw, 2rem); line-height: 1.9; margin: 8px 0 12px; }
+    .verse-card small { color: var(--gold-light); }
+
+    .reader-section { padding: 54px 0 90px; }
+    .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 24px; }
+    .section-heading h2 { margin: 0; font-size: clamp(2.2rem, 5vw, 4.3rem); font-weight: 500; line-height: 1; }
+    .section-heading p { max-width: 430px; color: var(--ink-soft); line-height: 1.8; margin: 0; }
+
+    .reader {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      min-height: 680px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255,253,247,.64);
+      box-shadow: var(--shadow);
+    }
+    .surah-panel { border-left: 1px solid var(--line); background: rgba(237,227,208,.42); }
+    .search-wrap { position: sticky; top: 0; padding: 18px; border-bottom: 1px solid var(--line); background: rgba(241,233,216,.92); backdrop-filter: blur(12px); z-index: 2; }
+    .search-wrap label { display: block; margin-bottom: 7px; color: var(--ink-soft); font-size: .82rem; }
+    .search {
+      width: 100%;
+      border: 1px solid transparent;
+      outline: none;
+      border-radius: 14px;
+      padding: 11px 14px;
+      color: var(--ink);
+      background: var(--white);
+      transition: border-color .2s ease, box-shadow .2s ease;
+    }
+    .search:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(185,138,67,.12); }
+    .surah-list { height: 612px; overflow-y: auto; padding: 8px; }
+    .surah-button {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      display: grid;
+      grid-template-columns: 38px 1fr auto;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 10px;
+      border-radius: 12px;
+      text-align: right;
+      transition: background .18s ease, transform .18s ease;
+    }
+    .surah-button:hover { background: rgba(255,255,255,.7); transform: translateX(-2px); }
+    .surah-button.active { background: var(--ink); color: var(--white); }
+    .surah-number { display: grid; place-items: center; width: 32px; aspect-ratio: 1; border: 1px solid currentColor; transform: rotate(45deg); border-radius: 7px; font-family: sans-serif; font-size: .7rem; }
+    .surah-number span { transform: rotate(-45deg); }
+    .surah-name { font-size: 1.04rem; }
+    .surah-meta { color: var(--ink-soft); font-family: sans-serif; font-size: .68rem; }
+    .active .surah-meta { color: rgba(255,255,255,.65); }
+
+    .reading-pane { max-height: 680px; overflow-y: auto; scroll-behavior: smooth; }
+    .reading-header { padding: 34px 42px 28px; text-align: center; border-bottom: 1px solid var(--line); background: rgba(255,253,247,.58); }
+    .reading-header h3 { margin: 0 0 8px; font-size: 2.6rem; font-weight: 500; }
+    .reading-header p { margin: 0; color: var(--ink-soft); font-family: sans-serif; font-size: .82rem; }
+    .ayahs { padding: 34px clamp(22px, 5vw, 62px) 56px; }
+    .basmala { text-align: center; font-size: 1.55rem; color: var(--gold); margin: 0 0 24px; }
+    .ayah-text { margin: 0; font-size: clamp(1.42rem, 2.5vw, 1.85rem); line-height: 2.45; text-align: justify; }
+    .ayah { transition: background .2s ease; border-radius: 8px; }
+    .ayah:hover { background: rgba(185,138,67,.08); }
+    .ayah-marker { display: inline-grid; place-items: center; width: 36px; height: 36px; margin: 0 5px; color: var(--gold); border: 1px solid var(--gold-light); border-radius: 50%; font-family: sans-serif; font-size: .72rem; vertical-align: middle; }
+
+    .state { min-height: 600px; display: grid; place-items: center; padding: 40px; text-align: center; color: var(--ink-soft); }
+    .state-icon { width: 64px; height: 64px; margin: 0 auto 18px; border: 1px solid var(--gold-light); border-radius: 50%; display: grid; place-items: center; color: var(--gold); font-size: 1.8rem; }
+    .skeleton { display: grid; gap: 14px; width: min(500px, 100%); }
+    .skeleton span { display: block; height: 18px; border-radius: 99px; background: linear-gradient(90deg, var(--paper-deep), var(--white), var(--paper-deep)); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+    .skeleton span:nth-child(2) { width: 82%; }
+    .skeleton span:nth-child(3) { width: 92%; }
+
+    footer { border-top: 1px solid var(--line); padding: 30px 0 42px; color: var(--ink-soft); }
+    .footer-inner { display: flex; justify-content: space-between; gap: 24px; }
+
+    @keyframes shimmer { to { background-position: -200% 0; } }
+    @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+    .hero-copy > *, .hero-art { opacity: 0; animation: rise .7s ease forwards; }
+    .hero-copy > *:nth-child(2) { animation-delay: .08s; }
+    .hero-copy > *:nth-child(3) { animation-delay: .16s; }
+    .hero-copy > *:nth-child(4) { animation-delay: .24s; }
+    .hero-art { animation-delay: .18s; }
+
+    @media (max-width: 850px) {
+      .nav-links { display: none; }
+      .hero { grid-template-columns: 1fr; padding-top: 54px; }
+      .hero-art { min-height: 390px; }
+      .arch { height: 390px; }
+      .section-heading { align-items: start; flex-direction: column; }
+      .reader { grid-template-columns: 1fr; }
+      .surah-panel { border-left: 0; border-bottom: 1px solid var(--line); }
+      .surah-list { display: flex; height: auto; overflow-x: auto; padding: 10px; }
+      .surah-button { min-width: 190px; }
+      .reading-pane { max-height: none; }
+      .reading-header { padding: 26px 20px 22px; }
+    }
+
+    @media (max-width: 520px) {
+      .shell { width: min(100% - 22px, 1180px); }
+      .nav { min-height: 68px; }
+      h1 { font-size: 3.55rem; }
+      .hero { min-height: auto; padding-bottom: 56px; }
+      .hero-copy > p { font-size: 1.05rem; }
+      .hero-art { min-height: 340px; }
+      .arch { height: 340px; }
+      .verse-card { padding: 26px 20px; }
+      .reader { border-radius: 18px; }
+      .ayahs { padding-inline: 18px; }
+      .ayah-text { line-height: 2.25; text-align: right; }
+      .footer-inner { flex-direction: column; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="shell nav">
+      <a class="brand" href="#top" aria-label="مشكاة — الصفحة الرئيسية">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3a7 7 0 1 0 7 7c0-1.2-.3-2.3-.8-3.3A8.8 8.8 0 1 1 12 3Z"/><path d="m16.5 3.5.5 1.2 1.2.5-1.2.5-.5 1.2-.5-1.2-1.2-.5 1.2-.5.5-1.2Z"/></svg>
+        </span>
+        <span><strong>مشكاة</strong><small>نورٌ يُقرأ</small></span>
+      </a>
+      <nav class="nav-links" aria-label="التنقل الرئيسي">
+        <a href="#reader">المصحف</a>
+        <a href="#about">عن مشكاة</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="shell hero">
+      <div class="hero-copy">
+        <span class="eyebrow">القرآن الكريم</span>
+        <h1>مشكاة <span>رفيقك إلى السكينة</span></h1>
+        <p>تصفّح سور القرآن الكريم، وابحث بالاسم، واقرأ الآيات بخط واضح في مساحة هادئة صُممت لتقرّبك من كلام الله.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#reader">ابدأ القراءة <span aria-hidden="true">←</span></a>
+          <button class="button button-ghost" id="continueButton" type="button">تابع من آخر سورة</button>
+        </div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="arch"></div>
+        <div class="verse-card">
+          <p>اللَّهُ نُورُ السَّمَاوَاتِ وَالْأَرْضِ</p>
+          <small>سورة النور · ٣٥</small>
+        </div>
+      </div>
+    </section>
+
+    <section class="shell reader-section" id="reader">
+      <div class="section-heading">
+        <div><span class="eyebrow">بين يديك</span><h2>المصحف الكريم</h2></div>
+        <p>اختر سورة من القائمة أو ابحث عنها، وسيحفظ الموقع موضعك الأخير على هذا الجهاز.</p>
+      </div>
+
+      <div class="reader">
+        <aside class="surah-panel" aria-label="قائمة السور">
+          <div class="search-wrap">
+            <label for="surahSearch">ابحث عن سورة</label>
+            <input class="search" id="surahSearch" type="search" placeholder="مثال: الكهف" autocomplete="off">
+          </div>
+          <div class="surah-list" id="surahList"></div>
+        </aside>
+        <article class="reading-pane" id="readingPane" aria-live="polite">
+          <div class="state" id="loadingState">
+            <div class="skeleton" aria-label="جارٍ تحميل المصحف">
+              <span></span><span></span><span></span><span></span><span></span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer id="about">
+    <div class="shell footer-inner">
+      <span>مشكاة — مساحة هادئة لقراءة القرآن الكريم.</span>
+      <span>جُعلت بمحبة وإتقان.</span>
+    </div>
+  </footer>
+
+  <script>
+    const state = { surahs: [], active: 1 };
+    const listElement = document.getElementById('surahList');
+    const readingPane = document.getElementById('readingPane');
+    const searchInput = document.getElementById('surahSearch');
+    const continueButton = document.getElementById('continueButton');
+
+    const arabicNumber = value => new Intl.NumberFormat('ar-EG', { useGrouping: false }).format(value);
+
+    function normalizeArabic(value) {
+      return value
+        .replace(/[أإآٱ]/g, 'ا')
+        .replace(/ى/g, 'ي')
+        .replace(/ة/g, 'ه')
+        .replace(/[ًٌٍَُِّْـ]/g, '')
+        .trim()
+        .toLowerCase();
+    }
+
+    function cleanSurahName(name) {
+      return name.replace('سُورَةُ ', '').replace('سُورَةُ', '');
+    }
+
+    function renderSurahList(items = state.surahs) {
+      if (!items.length) {
+        listElement.innerHTML = '<div class="state" style="min-height:160px">لا توجد سورة بهذا الاسم.</div>';
+        return;
+      }
+
+      listElement.innerHTML = items.map(surah => `
+        <button class="surah-button ${surah.number === state.active ? 'active' : ''}" type="button" data-surah="${surah.number}">
+          <span class="surah-number"><span>${arabicNumber(surah.number)}</span></span>
+          <span class="surah-name">${cleanSurahName(surah.name)}</span>
+          <span class="surah-meta">${arabicNumber(surah.ayahs.length)} آية</span>
+        </button>
+      `).join('');
+    }
+
+    function renderSurah(number, shouldScroll = true) {
+      const surah = state.surahs.find(item => item.number === number);
+      if (!surah) return;
+
+      state.active = number;
+      localStorage.setItem('mishkat-last-surah', String(number));
+      renderSurahList(filterSurahs(searchInput.value));
+
+      const isBasmalaSeparate = number !== 1 && number !== 9;
+      const verses = surah.ayahs.map((ayah, index) => {
+        let text = ayah.text;
+        if (isBasmalaSeparate && index === 0) {
+          text = text.replace(/^بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ\s*/, '');
+        }
+        return `<span class="ayah">${text} <span class="ayah-marker" title="الآية ${ayah.numberInSurah}">${arabicNumber(ayah.numberInSurah)}</span></span>`;
+      }).join(' ');
+
+      readingPane.innerHTML = `
+        <header class="reading-header">
+          <h3>${surah.name}</h3>
+          <p>${surah.revelationType === 'Meccan' ? 'مكية' : 'مدنية'} · ${arabicNumber(surah.ayahs.length)} آية</p>
+        </header>
+        <div class="ayahs">
+          ${isBasmalaSeparate ? '<p class="basmala">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>' : ''}
+          <p class="ayah-text">${verses}</p>
+        </div>
+      `;
+
+      if (shouldScroll) {
+        readingPane.scrollTop = 0;
+        document.getElementById('reader').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    function filterSurahs(query) {
+      const normalized = normalizeArabic(query);
+      if (!normalized) return state.surahs;
+      return state.surahs.filter(surah =>
+        normalizeArabic(cleanSurahName(surah.name)).includes(normalized) ||
+        surah.englishName.toLowerCase().includes(normalized)
+      );
+    }
+
+    function showError() {
+      readingPane.innerHTML = `
+        <div class="state">
+          <div><div class="state-icon">!</div><h3>تعذّر تحميل المصحف</h3><p>تحقق من اتصالك ثم أعد تحميل الصفحة.</p><button class="button button-primary" type="button" onclick="location.reload()">إعادة المحاولة</button></div>
+        </div>`;
+    }
+
+    async function loadQuran() {
+      try {
+        const response = await fetch('/quran-uthmani.json');
+        if (!response.ok) throw new Error('Quran data unavailable');
+        const payload = await response.json();
+        state.surahs = payload.data.surahs;
+        const saved = Number(localStorage.getItem('mishkat-last-surah')) || 1;
+        renderSurah(saved, false);
+      } catch (error) {
+        showError();
+      }
+    }
+
+    listElement.addEventListener('click', event => {
+      const button = event.target.closest('[data-surah]');
+      if (button) renderSurah(Number(button.dataset.surah));
+    });
+
+    searchInput.addEventListener('input', event => renderSurahList(filterSurahs(event.target.value)));
+    continueButton.addEventListener('click', () => renderSurah(Number(localStorage.getItem('mishkat-last-surah')) || 1));
+
+    loadQuran();
+  </script>
+</body>
+</html>
